@@ -1,0 +1,157 @@
+{
+  "name": "workflow_ai_sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4c8abc8a-2007-4ab9-9138-383daf67643d",
+      "name": "When chat message received",
+      "webhookId": "2f66655f-ee5e-486f-9d5f-18b47850662e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah asisten pelatihan NF Academy. Gunakan tool 'Get row(s) in sheet in Google Sheets' untuk menjawab semua pertanyaan pengguna mengenai jenis program, nama pelatihan, deskripsi, dan harga/biaya pelatihan sesuai dengan tabel yang tersedia. Jika data tidak ada, arahkan pengguna ke web nfacademy.id."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "513ce324-bd33-48f7-9213-dce2de50f934",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "1129798e-b136-4c20-be07-99801531a655",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "66hzq7UdLMPpotlL",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "6c10c0bd-99a4-43b5-a8c9-f30897fe05f4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1trndR_3bunpb8ZyTXzh3dj_uwlamoQ2d6c4WZs6cfF0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1trndR_3bunpb8ZyTXzh3dj_uwlamoQ2d6c4WZs6cfF0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1trndR_3bunpb8ZyTXzh3dj_uwlamoQ2d6c4WZs6cfF0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "26195aad-a528-46a3-a605-5f6ed2fe5910",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hhmu2pbN2NXHPZNw",
+          "name": "Google Sheets account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "329788d0-a659-4f32-a271-265f3426a876",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4771eb8eef932da2c74c23bbc81adb5d236a4cbd4415c08bb9d26f86130bb2c2"
+  },
+  "id": "DdQ663qnT21gxa50",
+  "tags": []
+}
